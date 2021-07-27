@@ -16,9 +16,9 @@ function areAllDigitsEqual(cpf) {
 
 function getCheckDigit(cpf) {
 	let sum = 0;
-	let positionFromTheRight = 2;
+	let rightToLeftPosition = 2;
 	for(let lastIndex = (cpf.length - 1); lastIndex >= FIRST_INDEX; lastIndex--) {
-		sum += parseInt(cpf[lastIndex]) * positionFromTheRight++;
+		sum += parseInt(cpf[lastIndex]) * rightToLeftPosition++;
 	}
 	let module = sum % ELEVEN_MODULE;
 	return ELEVEN_MODULE - (module < 2 ? ELEVEN_MODULE : module);
