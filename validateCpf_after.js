@@ -1,38 +1,38 @@
+const VALID_LENGTH = 11;
+const ELEVEN_MODULE = 11;
+const FIRST_INDEX = 0;
 
-function removeNotNumbers(str) {
-	return str.replace(/\D/g, '');
+function letOnlyNumbers(cpf) {
+	return cpf.replace(/\D/g, '');
 }
 
-function hasInvalidLength(str) {
-	return str.length !== 11;
+function hasInvalidLength(cpf) {
+	return cpf.length !== VALID_LENGTH;
 }
 
-function validateCpf(str) {
-	if(!str) return false;
-	str = removeNotNumbers(str);
-	if (hasInvalidLength(str)) return false;
-	if (str.split("").every(c => c === str[0])) return false;
-	let d1 = 0;
-	let d2 = 0;
-	let dg1 = 0;
-	let dg2 = 0;
-	let rest = 0;
-	for (let nCount = 1; nCount < str.length - 1; nCount++) {
-		const digito = parseInt(str.substring(nCount - 1, nCount));
-		d1 = d1 + (11 - nCount) * digito;
-		d2 = d2 + (12 - nCount) * digito;
-	};
-	rest = (d1 % 11);
-	dg1 = (rest < 2) ? dg1 = 0 : 11 - rest;
-	d2 += 2 * dg1;
-	rest = (d2 % 11);
-	if (rest < 2)
-		dg2 = 0;
-	else
-		dg2 = 11 - rest;
-	let nDigVerific = str.substring(str.length - 2, str.length);
-	let nDigResult = "" + dg1 + "" + dg2;
-	return nDigVerific == nDigResult;
+function areAllDigitsEqual(cpf) {
+	return cpf.split("").every(current => current === cpf[FIRST_INDEX]);
+}
+
+function getCheckDigit(cpf) {
+	let sum = 0;
+	let positionFromTheRight = 2;
+	for(let lastIndex = (cpf.length - 1); lastIndex >= FIRST_INDEX; lastIndex--) {
+		sum += parseInt(cpf[lastIndex]) * positionFromTheRight++;
+	}
+	let module = sum % ELEVEN_MODULE;
+	return ELEVEN_MODULE - (module < 2 ? ELEVEN_MODULE : module);
+}
+
+function validateCpf(cpf) {
+	if(!cpf) return false;
+	cpf = letOnlyNumbers(cpf);
+	if (hasInvalidLength(cpf)) return false;
+	if (areAllDigitsEqual(cpf)) return false;
+	let tempCpf = cpf.substring(0,9);
+	tempCpf = tempCpf.concat(getCheckDigit(tempCpf));
+	tempCpf = tempCpf.concat(getCheckDigit(tempCpf));
+	return cpf == tempCpf;
 }
 
 module.exports = {
